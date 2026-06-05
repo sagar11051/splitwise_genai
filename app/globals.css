@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/* ── Splitwise design tokens ─────────────────────────────────────── */
+:root {
+  --sw-green:       #1CC29F;
+  --sw-green-deep:  #0F3D3E;
+  --sw-owed:        #1CC29F;
+  --sw-owe:         #FF652F;
+  --sw-bg:          #F7F8F8;
+  --sw-card:        #FFFFFF;
+  --sw-ink:         #1A1A1A;
+  --sw-ink-soft:    #6B6B6B;
+  --sw-divider:     #ECECEC;
+
+  /* AI accent — used ONLY on smart-feature surfaces */
+  --ai-accent-from: #1CC29F;
+  --ai-accent-to:   #16B6C4;
+  --ai-glow:        rgba(28, 194, 159, 0.14);
+}
+
+@theme inline {
+  --color-sw-green:      #1CC29F;
+  --color-sw-green-deep: #0F3D3E;
+  --color-sw-owed:       #1CC29F;
+  --color-sw-owe:        #FF652F;
+  --color-sw-bg:         #F7F8F8;
+  --color-sw-card:       #FFFFFF;
+  --color-sw-ink:        #1A1A1A;
+  --color-sw-ink-soft:   #6B6B6B;
+  --color-sw-divider:    #ECECEC;
+  --font-sans:           var(--font-figtree), "Figtree", system-ui, sans-serif;
+}
+
+/* ── Base ────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background-color: var(--sw-bg);
+  color: var(--sw-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular figures for money */
+.font-money {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── AI shimmer loading state ────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #f0faf8 25%, #d4f5ef 50%, #f0faf8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── Staggered reveal animation ──────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.animate-fade-up { animation: fade-up 0.28s ease both; }
+
+/* .ai-border removed — no longer in use */
+
+/* ── Desktop: neutral background makes the 430px card look phone-like ── */
+@media (min-width: 640px) {
+  body { background-color: #E2E5E9; }
+}
+
+/* ── Thin scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--sw-divider); border-radius: 2px; }
