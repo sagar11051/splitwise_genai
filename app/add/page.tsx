@@ -67,7 +67,7 @@ function AddExpenseInner() {
 
   // ── Smart Add state ──────────────────────────────────────────────────────
   const [smartMode, setSmartMode] = useState<SmartMode>("idle");
-  const [smartText, setSmartText] = useState("");
+  const [smartText, setSmartText] = useState(searchParams.get("q") ?? "");
   const [errorMsg, setErrorMsg] = useState("");
   const [rawJSON, setRawJSON] = useState<RawAIOutput | null>(null);
   const [showRaw, setShowRaw] = useState(false);
@@ -93,6 +93,7 @@ function AddExpenseInner() {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const confirmCardRef = useRef<HTMLDivElement>(null);
+  const autoParseRef = useRef(false);
 
   // Scroll confirmation card into view after parse
   useEffect(() => {
@@ -101,9 +102,20 @@ function AddExpenseInner() {
     }
   }, [smartMode]);
 
+  // Auto-parse when arriving from the command bar (?q= param)
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q && !autoParseRef.current && members.length > 0 && smartMode === "idle") {
+      autoParseRef.current = true;
+      handleSmartParse(q);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [members.length]);
+
   // ── Smart Add — call /api/agent/parse ────────────────────────────────────
-  async function handleSmartParse() {
-    const text = smartText.trim();
+  async function handleSmartParse(textOverride?: string) {
+    const text = (textOverride ?? smartText).trim();
+    if (textOverride) setSmartText(textOverride);
     if (!text || members.length === 0) return;
 
     setSmartMode("parsing");
@@ -336,7 +348,7 @@ function AddExpenseInner() {
 
             {smartMode !== "confirming" && (
               <button
-                onClick={handleSmartParse}
+                onClick={() => handleSmartParse()}
                 disabled={!smartText.trim() || smartMode === "parsing" || members.length === 0}
                 className="w-full py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity disabled:opacity-40"
                 style={{ background: "var(--sw-green)" }}
